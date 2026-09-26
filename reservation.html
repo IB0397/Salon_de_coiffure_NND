@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Réserver — Salon de coiffure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:#1B1B1E; --paper:#F6F1E7; --amber:#C99A4B; --red:#7A2E2E;
+    --line: rgba(27,27,30,0.14);
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:inherit;}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){ --ink:#F6F1E7; --paper:#151417; --line:rgba(246,241,231,0.16); }
+  }
+  :root[data-theme="dark"]{ --ink:#F6F1E7; --paper:#151417; --line:rgba(246,241,231,0.16); }
+  html{scroll-padding-top:env(safe-area-inset-top,0px);}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif; line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2{ font-family:'Bebas Neue', 'Inter', sans-serif; letter-spacing:0.02em; margin:0; }
+  .wrap{ max-width:560px; margin:0 auto; padding:0 20px; }
+  header.hero{
+    background:var(--ink); color:var(--paper);
+    padding:56px 20px 40px; text-align:center;
+  }
+  header.hero h1{ font-size:clamp(2.4rem,9vw,3.2rem); }
+  header.hero p{ margin:10px 0 0; opacity:0.75; font-size:1.05rem; }
+  .badge{
+    display:inline-block; margin-top:18px; padding:8px 18px;
+    border:1px solid var(--amber); color:var(--amber); border-radius:999px;
+    font-size:0.85rem; font-weight:600;
+  }
+  section{ padding:36px 0; border-bottom:1px solid var(--line); }
+  section:last-of-type{ border-bottom:none; }
+  h2.section-title{ font-size:1.6rem; margin-bottom:16px; }
+  .tarifs{ list-style:none; margin:0; padding:0; }
+  .tarifs li{
+    display:flex; justify-content:space-between; gap:12px;
+    padding:11px 0; border-bottom:1px dashed var(--line); font-size:1rem;
+  }
+  .tarifs li:last-child{ border-bottom:none; }
+  .tarifs .prix{ font-weight:700; color:var(--amber); white-space:nowrap; }
+  .hours{ display:grid; grid-template-columns:1fr auto; gap:8px 16px; font-size:1rem; }
+  .hours span:nth-child(odd){ opacity:0.75; }
+  form{ display:flex; flex-direction:column; gap:14px; }
+  label{ font-size:0.9rem; font-weight:600; opacity:0.85; }
+  input, select{
+    width:100%; padding:12px 14px; border-radius:10px;
+    border:1px solid var(--line); background:transparent; color:var(--ink);
+    font-family:inherit; font-size:1rem;
+  }
+  input:focus, select:focus{ outline:2px solid var(--amber); outline-offset:1px; }
+  button{
+    appearance:none; border:none; cursor:pointer;
+    padding:15px 18px; border-radius:10px; font-family:inherit;
+    font-size:1.05rem; font-weight:700;
+  }
+  .btn-primary{ background:var(--amber); color:var(--ink); margin-top:6px; }
+  .btn-primary:active{ transform:scale(0.99); }
+  .pay-option{
+    border:1px solid var(--line); border-radius:12px; padding:16px; margin-bottom:12px;
+  }
+  .pay-option h3{ margin:0 0 6px; font-size:1.05rem; }
+  .pay-option p{ margin:0; opacity:0.8; font-size:0.92rem; }
+  .btn-secondary{
+    background:transparent; border:1px solid var(--red); color:var(--red);
+    margin-top:10px; width:100%;
+  }
+  footer{ padding:28px 0 40px; text-align:center; font-size:0.85rem; opacity:0.65; }
+  .edit-note{
+    background:rgba(201,154,75,0.15); border:1px dashed var(--amber);
+    border-radius:10px; padding:10px 14px; font-size:0.82rem; margin-top:18px;
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <h1 id="salon-name">NOM DU SALON</h1>
+    <p>Coiffure homme &amp; barbier — Conakry</p>
+    <span class="badge">💈 Ouvert aujourd'hui</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section>
+    <h2 class="section-title">Nos prestations</h2>
+    <ul class="tarifs" id="tarifs-list"></ul>
+  </section>
+
+  <section>
+    <h2 class="section-title">Horaires</h2>
+    <div class="hours">
+      <span>Lundi – Samedi</span><span>8h00 – 20h00</span>
+      <span>Dimanche</span><span>9h00 – 18h00</span>
+    </div>
+  </section>
+
+  <section id="reserver">
+    <h2 class="section-title">Réserver un rendez-vous</h2>
+    <form id="booking-form">
+      <div>
+        <label for="nom">Votre nom</label>
+        <input type="text" id="nom" required placeholder="Ex : Mamadou Diallo">
+      </div>
+      <div>
+        <label for="prestation">Prestation souhaitée</label>
+        <select id="prestation" required></select>
+      </div>
+      <div>
+        <label for="date">Date souhaitée</label>
+        <input type="date" id="date" required>
+      </div>
+      <div>
+        <label for="heure">Heure souhaitée</label>
+        <input type="time" id="heure" required>
+      </div>
+      <button type="submit" class="btn-primary">Envoyer la demande via WhatsApp</button>
+    </form>
+  </section>
+
+  <section>
+    <h2 class="section-title">Paiement</h2>
+    <div class="pay-option">
+      <h3>Espèces</h3>
+      <p>Réglez directement sur place, à la fin de votre prestation.</p>
+    </div>
+    <div class="pay-option">
+      <h3>Orange Money</h3>
+      <p>Envoyez le montant au <strong id="om-number">+224 XX XX XX XX</strong>, puis confirmez ci-dessous.</p>
+    </div>
+    <div class="pay-option">
+      <h3>MTN Mobile Money</h3>
+      <p>Envoyez le montant au <strong id="mtn-number">+224 XX XX XX XX</strong>, puis confirmez ci-dessous.</p>
+    </div>
+    <button id="btn-confirm-pay" class="btn-secondary">J'ai payé — envoyer la preuve via WhatsApp</button>
+  </section>
+
+  <footer>
+    <p id="salon-address">Quartier — Conakry, Guinée</p>
+    <p>Prise de rendez-vous et paiement mobile money uniquement — aucune donnée n'est conservée sur ce site.</p>
+    <div class="edit-note">
+      Cette page est un modèle : remplacez le nom du salon, l'adresse et les numéros
+      WhatsApp / Orange Money / MTN dans le code (objet CONFIG) avant publication.
+    </div>
+  </footer>
+</div>
+
+<script>
+  // ---- A MODIFIER AVEC VOS VRAIES INFORMATIONS ----
+  const CONFIG = {
+    salonName: "NOM DU SALON",
+    address: "Quartier — Conakry, Guinée",
+    whatsapp: "224000000000",      // numéro WhatsApp du salon, sans le +
+    orangeMoney: "+224 XX XX XX XX",
+    mtnMoney: "+224 XX XX XX XX",
+    tarifs: [
+      ["Coupe simple homme", "25 000 GNF"],
+      ["Coupe + barbe", "35 000 GNF"],
+      ["Dégradé / coupe stylée", "30 000 GNF"],
+      ["Taille de barbe seule", "15 000 GNF"],
+      ["Soin visage / gommage", "20 000 GNF"],
+      ["Coloration homme", "40 000 GNF"],
+      ["Coupe enfant", "15 000 GNF"],
+    ]
+  };
+  // --------------------------------------------------
+
+  document.getElementById("salon-name").textContent = CONFIG.salonName;
+  document.getElementById("salon-address").textContent = CONFIG.address;
+  document.getElementById("om-number").textContent = CONFIG.orangeMoney;
+  document.getElementById("mtn-number").textContent = CONFIG.mtnMoney;
+
+  const tarifsList = document.getElementById("tarifs-list");
+  const prestationSelect = document.getElementById("prestation");
+  CONFIG.tarifs.forEach(([nom, prix]) => {
+    const li = document.createElement("li");
+    li.innerHTML = `<span>${nom}</span><span class="prix">${prix}</span>`;
+    tarifsList.appendChild(li);
+
+    const opt = document.createElement("option");
+    opt.value = `${nom} (${prix})`;
+    opt.textContent = `${nom} — ${prix}`;
+    prestationSelect.appendChild(opt);
+  });
+
+  function openWhatsApp(message) {
+    const url = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+  }
+
+  document.getElementById("booking-form").addEventListener("submit", function(e){
+    e.preventDefault();
+    const nom = document.getElementById("nom").value;
+    const prestation = document.getElementById("prestation").value;
+    const date = document.getElementById("date").value;
+    const heure = document.getElementById("heure").value;
+    const message =
+      `Bonjour, je souhaite réserver un rendez-vous.\n` +
+      `Nom : ${nom}\n` +
+      `Prestation : ${prestation}\n` +
+      `Date souhaitée : ${date}\n` +
+      `Heure souhaitée : ${heure}`;
+    openWhatsApp(message);
+  });
+
+  document.getElementById("btn-confirm-pay").addEventListener("click", function(){
+    openWhatsApp("Bonjour, je viens d'effectuer un paiement Mobile Money pour mon rendez-vous. Voici la capture de confirmation en pièce jointe.");
+  });
+</script>
+
+</body>
+</html>
